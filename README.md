@@ -1,6 +1,15 @@
 # My-First-Solidity-Contract
 Writing my first contract in Solidity<br>
-Initiating my journey in web3 space.<br>
+Initiating my journey in web3 space.
+<hr>
+
+## Directly run project:
+1. ```npm i```
+3. ```npx hardhat run scripts/deploy.js --network rinkeby```
+4. ```npx hardhat run scripts/interact.js --network rinkeby```
+
+<hr>
+
 ## Project steps:
 - Step-1: Environment setup
 - Step-2: Writing first solidity contract
