@@ -1,5 +1,5 @@
 # My-First-Solidity-Contract
-Writing my first contract in Solidity
+Writing my first contract in Solidity<br>
 Initiating my journey in web3 space.
 ##Project steps:
 - Environment setup
