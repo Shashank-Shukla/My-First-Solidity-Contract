@@ -91,7 +91,7 @@ hardhat.config.js
 package-lock.json
 Package.json
 ```
-> Create a HelloWorld.sol file in the contracts folder and write the following code:
+> Create a [HelloWorld.sol](https://github.com/Shashank-Shukla/My-First-Solidity-Contract/blob/main/contracts/HelloWorld.sol) file in the contracts folder and write the following code:
 
 Start with mentioning the version of the solidity. A smart contract has states, functions and events.
 -   The states are usually variables, tokens, NFTs whose state we want to maintain in the contract.
@@ -116,28 +116,7 @@ API_URL_KEY = ALCHEMY-APP-HTTP-URL
 API_KEY = ALCHEMY-APP-API-KEY
 CONTRACT_ADDR = CONTRACT-ADDRESS-WE'LL-GET-AFTER-DEPLOYING (Leave it empty rn)
 ```
-> Update hardhat file to setup Rinkeby test deployment environment
-```
-/**
- * @type import('hardhat/config').HardhatUserConfig
- */
-require('dotenv').config(); //all the key value pairs are being made available due to this lib
-require('@nomiclabs/hardhat-ethers');
- 
-const {API_URL_KEY, PRIVATE_KEY} = process.env; //environment variables are being loaded here.
- 
-module.exports = {
-  solidity: "0.7.3",
-  defaultNetwork: 'rinkeby',
-  networks: {
-    hardhat: {},
-    rinkeby: {
-        url: API_URL_KEY,
-        accounts: [`0x${PRIVATE_KEY}`]
-    }
-  }
-};
-```
+> Update [hardhat config file](https://github.com/Shashank-Shukla/My-First-Solidity-Contract/blob/main/hardhat.config.js) to setup Rinkeby test deployment environment
 
 
 #### Step-3.2: Writing Deployment Script
@@ -145,21 +124,7 @@ module.exports = {
 Create a deploy.js file in the "scripts" folder. This file will contain all the logic for deployment.<br>
 Hardhat ethers is a plugin that gives us access to ethers.js library. Ethers.js library gives us a way to interact with the blockchain world, we can deploy, fetch contracts and we can call their functions.
 
-Update deploy.js with following details:
-```
-const {ethers} = require("hardhat");
-async function main(){
-    const initializeMessage = "Activating block...";
-    const HelloWorld = await ethers.getContractFactory('HelloWorld');
-    const initContract = await HelloWorld.deploy(initializeMessage);
-    console.log("Contract deployed to contract address: ",initContract.address);
-}
-
-main().then(() => process.exit(0)).catch(err => {
-    console.error("Exception occured: ",err);
-    process.exit(1);
-});
-```
+> Update [deploy.js](https://github.com/Shashank-Shukla/My-First-Solidity-Contract/blob/main/scripts/deploy.js)
 
 To deploy it to test network, run the following command:
 ```npx hardhat run scripts/deploy.js --network rinkeby```
@@ -169,36 +134,11 @@ To deploy it to test network, run the following command:
 
 
 #### Step-3.3: Interacting with the Deployed Contract
-Create a interact.js file in the "scripts" folder.<br>
+> Create [interact.js file](https://github.com/Shashank-Shukla/My-First-Solidity-Contract/blob/main/scripts/interact.js) in the "scripts" folder.
+
 Ether.js library gives us **providers**, which are basically the interface for our interaction with the Ethereum Blockchain nodes. When a request is made, it is sent to multiple backends simultaneously. As responses from each backend are returned, they are checked that they agree. Once a quorum has been reached (i.e. enough of the backends agree), the response is provided to your application.<br>
 **Signers** is an abstraction of an ethereum account. The signers can be used to sign messages and transactions which can result in calling function, changing state variables etc. Here we are sharing our account private key, because we are the signers of this transaction.
-```
-const {ethers} = require("hardhat");
 
-const API_Key = process.env.API_Key;
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
-const CONTRACT_ADDR = process.env.CONTRACT_ADDR;
-const contract = require("../artifacts/contracts/HelloWorld.sol/HelloWorld.json");
-const alchemyProvider = new ethers.providers.AlchemyProvider(network="rinkeby", API_Key);   // provider - Alchemy
-const signer = new ethers.Wallet(PRIVATE_KEY, alchemyProvider);   // signer - we
-const contractInstance = new ethers.Contract(CONTRACT_ADDR, contract.abi, signer);    // contract instance
-
-async function main(){
-    const newMsg = "Message updated twice!";
-    const msg = await contractInstance.message();
-    console.log("> Message received: ", msg);
-    const updateMsg = await contractInstance.update(newMsg);
-    await updateMsg.wait();
-
-    const newMsgRx = await contractInstance.message();
-    console.log("> Message updated to: ", newMsgRx);
-}
-
-main().then(() => process.exit(0)).catch(err => {
-    console.log("X Error occured: ", err);
-    process.exit(1);
-});
-```
 To deploy it to test network, run the following command:<br>
 ```npx hardhat run scripts/interact.js --network rinkeby```
 <hr>
